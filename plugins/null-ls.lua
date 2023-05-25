@@ -53,6 +53,7 @@ return {
           format = "line",
           check_exit_code = function(code) return code <= 2 end,
           multiple_files = true,
+          ignore_stderr = true,
           on_output = h.diagnostics.from_patterns {
             -- see spec for pattern examples
             {

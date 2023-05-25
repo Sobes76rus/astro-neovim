@@ -1,15 +1,13 @@
-local lsp_util = require('lspconfig.util')
-local utils = require('user.utils')
+local lsp_util = require "lspconfig.util"
+local utils = require "user.utils"
 
 return function(opts)
   local p
   local r
 
-  print('Ruff-lsp settings')
-
   if vim.env.VIRTUAL_ENV then
     p = lsp_util.path.join(vim.env.VIRTUAL_ENV, "bin", "python")
-    r = lsp_util.path.join(vim.env.VIRTUAL_ENV, 'bin', 'ruff')
+    r = lsp_util.path.join(vim.env.VIRTUAL_ENV, "bin", "ruff")
   else
     p = utils.find_cmd("python", ".venv/bin", opts.root_dir)
     r = utils.find_cmd("ruff", ".venv/bin", opts.root_dir)
@@ -19,26 +17,24 @@ return function(opts)
     settings = {
       interpreter = { p },
       args = {
-        '--extend-select',
-        'I',
-      }
-    }
+        "--extend-select",
+        "I",
+      },
+    },
   }
 
   opts.on_attach = function()
-    vim.api.nvim_create_autocmd('BufWritePre', {
-      pattern = { '*.py', '*.pyi' },
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      pattern = { "*.py", "*.pyi" },
       callback = function()
         local clients = vim.lsp.get_active_clients()
         for _, client in pairs(clients) do
-          if client.name ~= 'ruff_lsp' then
-            goto continue
-          end
+          if client.name ~= "ruff_lsp" then goto continue end
 
           local params = vim.lsp.util.make_range_params(nil, client.offset_encoding)
           params.context = {
-            only = { 'source.organizeImports' },
-            diagnostics = {}
+            only = { "source.organizeImports" },
+            diagnostics = {},
           }
 
           local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
@@ -54,7 +50,7 @@ return function(opts)
 
           ::continue::
         end
-      end
+      end,
     })
   end
 
