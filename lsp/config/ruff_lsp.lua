@@ -33,7 +33,7 @@ return function(opts)
 
           local params = vim.lsp.util.make_range_params(nil, client.offset_encoding)
           params.context = {
-            only = { "source.organizeImports" },
+            only = { "source.fixAll" },
             diagnostics = {},
           }
 
